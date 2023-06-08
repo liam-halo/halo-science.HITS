@@ -19,8 +19,40 @@ options = time_function(@getArrayFromByteStream, bytestream, 1);
 % Parse Threat Data
 threats_compiled = time_function(@parse_threat_data, file_data.ThreatSequence, time_run);
 
+%% Visualise Cuboids
+
+proj_2d = zeros(600, 800);
+figure();
 
 
+for threat_index = 1:size(threats_compiled, 1)
+
+    ROI = double([threats_compiled(threat_index,:).base{1};...
+            threats_compiled(threat_index,:).extents{1}])';
+    
+    proj_2d(ROI(3) : ROI(3) + ROI(6), ...
+                ROI(1) : ROI(1) + ROI(4)) = proj_2d(ROI(3) : ROI(3) + ROI(6), ...
+                                                        ROI(1) : ROI(1) + ROI(4)) + 1;
+    
+%     subplot(1,2,2)
+    scatter3(ROI(1), ROI(2), ROI(3), 1, [1 1 1]); hold on
+    ax = gca;
+    cuboid = images.roi.Cuboid(ax, 'Position', ROI);
+                                                    
+end
+
+xlim([0 600]);
+ylim([0 400]);
+zlim([0 800]);
+
+
+figure();
+subplot(1,2,1)
+imagesc(proj_2d);
+title("Z-X Projection");
+
+subplot(1,2,2)
+title("3D ROIs");
 
 
 
