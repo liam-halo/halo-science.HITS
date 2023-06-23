@@ -32,12 +32,13 @@ addpath(genpath("G:\My Drive\GitHub\halo-science.toolbox"));
 time_run = true;
 options = init_parameters();
 
-N = 286;
+N = 25601;
 
 runtime_table = table();
 
-for file_index = 3:N
+for file_index = 1:N
     
+    try
     [file_data, load_time] = import_IDSS_data(file_index, time_run);
 
     % Parse Threat Data
@@ -50,6 +51,9 @@ for file_index = 3:N
     runtime_table.threat_number(file_index) = sum(string(threats_compiled.ATDFlag) == "THREAT");  
     
     disp(file_index + "/" + N);
+    catch
+        disp(file_index + "/" + N + " failed");
+    end
     
 end
 
